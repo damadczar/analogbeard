@@ -1,7 +1,12 @@
 # analogbeard.com
 
-The Analog Beard website: for now a single "coming soon" page. Arcane machinery. Greybeard
+The Analog Beard website: for now a single "coming soon" page. Arcane inventions. Greybeard
 ingenuity. Circuits, code, coin-op.
+
+The tagline's first word rotates: the page says "Arcane" (what search engines and link previews
+see), and a small script in `index.html` flickers in another every 6 to 10 seconds: Uncanny,
+Curious, Eclectic, Timeless, Wondrous. Edit `WORDS` there to change the set. Visitors who ask for
+reduced motion get one random word and no flicker.
 
 ## How it's served
 
@@ -35,6 +40,6 @@ The text is set in Fraunces (from Google Fonts), the same family as the wordmark
 
 ## Ideas for later
 
-- **"Golden-age machinery."** was the first line of the tagline before "Arcane machinery."
+- **"Golden-age machinery."** was the first line of the tagline before "Arcane inventions."
   Keep it in mind as a subheading for the coin-op work (arcade and pinball) when that gets its own
   section or page.

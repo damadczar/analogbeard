@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Analog Beard: arcane machinery, greybeard ingenuity</title>
-<meta name="description" content="Analog Beard: arcane machinery, greybeard ingenuity. Circuits, code and coin-op. Coming soon.">
+<title>Analog Beard: arcane inventions, greybeard ingenuity</title>
+<meta name="description" content="Analog Beard: arcane inventions, greybeard ingenuity. Circuits, code and coin-op. Coming soon.">
 <meta name="theme-color" content="#1c1714">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://analogbeard.com/">
 <meta property="og:title" content="Analog Beard">
-<meta property="og:description" content="Arcane machinery. Greybeard ingenuity. Circuits, code and coin-op. Coming soon.">
+<meta property="og:description" content="Arcane inventions. Greybeard ingenuity. Circuits, code and coin-op. Coming soon.">
 <meta property="og:image" content="https://analogbeard.com/assets/analogbeard_banner_1600.png">
 <meta property="og:image:width" content="1600">
 <meta property="og:image:height" content="640">
@@ -61,7 +61,7 @@
     font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 48;
   }
   /* the tagline is always two lines, one statement each */
-  h1 span { display: block; }
+  h1 > span { display: block; }
   .fields {
     margin-top: 0.9rem;
     font-size: 0.8rem;
@@ -97,6 +97,25 @@
   .logo .glow     { animation: glow 6.1s infinite; }
   .logo .fil-glow { animation: filament 6.1s infinite; }
   .logo .fil      { animation: filament 6.1s infinite; }
+
+  /* the tagline's first word changes now and then: it flickers out, the tube stutters, and a new
+     word flickers on with a brief amber glow, like a sign being switched. The script below picks it. */
+  @keyframes word-out {
+    0% { opacity: 1; }    20% { opacity: .25; }  35% { opacity: .9; }
+    55% { opacity: .1; }  70% { opacity: .55; }  100% { opacity: 0; }
+  }
+  @keyframes word-in {
+    0% { opacity: 0; }    15% { opacity: .75; text-shadow: 0 0 .5em var(--amber); }
+    25% { opacity: .1; }  45% { opacity: 1; text-shadow: 0 0 .6em var(--amber); }
+    55% { opacity: .45; } 100% { opacity: 1; text-shadow: 0 0 0 transparent; }
+  }
+  @keyframes zap {
+    0%, 100% { opacity: 1; } 20% { opacity: .15; } 35% { opacity: .8; } 50% { opacity: .1; } 70% { opacity: .9; }
+  }
+  h1 .word.out { animation: word-out .5s forwards; }
+  h1 .word.in  { animation: word-in .7s; }
+  .logo.zap .glow, .logo.zap .fil-glow, .logo.zap .fil { animation: zap .5s; }
+
   @media (prefers-reduced-motion: reduce) {
     .logo .glow, .logo .fil-glow, .logo .fil { animation: none; }
   }
@@ -140,9 +159,32 @@
 </svg>
 <!-- logo:end -->
   </div>
-  <h1><span>Arcane machinery.</span> <span>Greybeard ingenuity.</span></h1>
+  <h1><span><span class="word">Arcane</span> inventions.</span> <span>Greybeard ingenuity.</span></h1>
   <p class="fields">Circuits<span>·</span>Code<span>·</span>Coin-op</p>
   <p class="soon">Coming soon</p>
 </main>
+<script>
+  // The tagline's first word: "Arcane" in the page (what search engines and link previews see), then
+  // every 6 to 10 seconds a different one flickers in. With reduced motion: one random word, no changes.
+  (function () {
+    var WORDS = ["Arcane", "Uncanny", "Curious", "Eclectic", "Timeless", "Wondrous"];
+    var word = document.querySelector("h1 .word"), logo = document.querySelector(".logo");
+    function next() {
+      var options = WORDS.filter(function (w) { return w !== word.textContent; });
+      return options[Math.floor(Math.random() * options.length)];
+    }
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { word.textContent = next(); return; }
+    function swap() {
+      word.classList.remove("in"); word.classList.add("out"); logo.classList.add("zap");
+      setTimeout(function () {
+        word.textContent = next();
+        word.classList.remove("out"); void word.offsetWidth; word.classList.add("in");
+      }, 500);
+      setTimeout(function () { logo.classList.remove("zap"); }, 520);
+      setTimeout(swap, 6000 + Math.random() * 4000);
+    }
+    setTimeout(swap, 5000);
+  })();
+</script>
 </body>
 </html>
