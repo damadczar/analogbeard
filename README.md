@@ -32,3 +32,9 @@ The logo is inline (not an `<img>`) so the page's CSS can make the tube's glow a
 The flicker is switched off for visitors whose system asks for reduced motion.
 
 The text is set in Fraunces (from Google Fonts), the same family as the wordmark.
+
+## Ideas for later
+
+- **"Golden-age machinery."** was the first line of the tagline before "Old-school engineering."
+  Keep it in mind as a subheading for the coin-op work (arcade and pinball) when that gets its own
+  section or page.
