@@ -1,6 +1,6 @@
 # analogbeard.com
 
-The Analog Beard website: for now a single "coming soon" page. Modern inventions. Greybeard
+The Analog Beard website: for now a single "coming soon" page. Arcane machinery. Greybeard
 ingenuity. Circuits, code, coin-op.
 
 ## How it's served
@@ -35,6 +35,6 @@ The text is set in Fraunces (from Google Fonts), the same family as the wordmark
 
 ## Ideas for later
 
-- **"Golden-age machinery."** was the first line of the tagline before "Modern inventions."
+- **"Golden-age machinery."** was the first line of the tagline before "Arcane machinery."
   Keep it in mind as a subheading for the coin-op work (arcade and pinball) when that gets its own
   section or page.
