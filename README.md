@@ -1,7 +1,7 @@
 # analogbeard.com
 
-The Analog Beard website: for now a single "coming soon" page. Where old-world electronics meet the
-modern age: arcade, audio, pinball.
+The Analog Beard website: for now a single "coming soon" page. Old-world machinery. Greybeard
+ingenuity. Arcade, audio, pinball.
 
 ## How it's served
 
