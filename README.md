@@ -1,6 +1,6 @@
 # analogbeard.com
 
-The Analog Beard website: for now a single "coming soon" page. Old-world machinery. Greybeard
+The Analog Beard website: for now a single "coming soon" page. Golden-age machinery. Greybeard
 ingenuity. Arcade, audio, pinball.
 
 ## How it's served
