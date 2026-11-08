@@ -23,6 +23,8 @@ reduced motion get one random word and no flicker.
 | `assets/analogbeard_banner_1600.png` | The preview image when the link is shared (Open Graph) |
 | `assets/analogbeard_lockup_stacked_dark.svg` | The logo as a file (the page uses the inlined copy) |
 | `update_logo.py` | Copies the logo files in from the bearded-logos repo and re-inlines the logo |
+| `tools/taglines.sh` | Previews the page with other tagline words: `tools/taglines.sh Arcane Wondrous "Golden-age machinery"` screenshots each and opens them in Preview |
+| `tools/phone.html` | Open in Chrome to see the page at phone widths (390 and 320 px) |
 
 ## The logo
 
