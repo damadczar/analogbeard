@@ -137,7 +137,13 @@
   .logo .sketch .guides > * { stroke-dasharray: .02 .015; stroke-dashoffset: 0; animation: appear .6s .9s both; }
   .logo .sketch text { animation: appear .6s 1.1s both; }
   .logo.intro .glow, .logo.intro .fil-glow, .logo.intro .fil { animation: ignite 1s 1.7s both; }
-  .logo.intro .art, .logo.intro .shade-dark { animation: appear .3s 2.15s both; }
+  /* the color comes up gradually with the filament's first flickers, the same way it does on a
+     relight, rather than switching on */
+  @keyframes art-first-light {
+    0% { opacity: 0; filter: brightness(.5); } 30% { opacity: .6; filter: brightness(.8); }
+    45% { opacity: .45; filter: brightness(.65); } 100% { opacity: 1; filter: brightness(1); }
+  }
+  .logo.intro .art, .logo.intro .shade-dark { animation: art-first-light .7s 1.85s both; }
 
   /* charcoal shading over the tube (also from update_logo.py): dark graphite while the tube is lit,
      light pencil while it is out */
