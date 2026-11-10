@@ -36,9 +36,16 @@ python3 update_logo.py        # or: python3 update_logo.py /path/to/bearded-logo
 ```
 
 The logo is inline (not an `<img>`) so the page's CSS can make the tube's glow and filament flicker.
-The flicker is switched off for visitors whose system asks for reduced motion.
 
-The text is set in Saira (from Google Fonts); the wordmark in the logo stays Fraunces. A film-grain and vignette overlay (CSS, no image files) sits over the whole page.
+`update_logo.py` also adds a pencil sketch of the tube (a web-only layer: the logo itself stays plain
+so it still works as a PCB silkscreen). The page opens on that sketch drawing itself, with
+handwritten labels (tube, filament, beard, plug), then the filament catches and the colored tube
+fades in over it. After that the stutters only dim the tube, and every 15 to 35 seconds it goes dark
+(still in color) for a moment and relights. The label positions are placed by hand for this logo,
+so check them by eye if the logo changes. All of the motion is switched off for visitors whose
+system asks for reduced motion: they see the lit tube with its labels.
+
+The text is set in Saira and the sketch labels in Nanum Pen Script (both from Google Fonts); the wordmark in the logo stays Fraunces. A film-grain and vignette overlay (CSS, no image files) sits over the whole page.
 
 ## Ideas for later
 
