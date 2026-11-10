@@ -68,7 +68,7 @@ notes = (
     '<path d="M 276 486 Q 262 474 248 472"/><path d="M 256 466 L 248 472 L 257 478"/>'
     '</g>'
     '<text x="70" y="108" text-anchor="end">tube</text>'
-    '<text class="small" x="70" y="134" text-anchor="end">(12AX7)</text>'
+    '<text class="small" x="70" y="134" text-anchor="end">(2A3)</text>'
     '<text x="320" y="66">filament</text>'
     '<text x="60" y="410" text-anchor="end">beard</text>'
     '<text x="280" y="500">plug</text>'
