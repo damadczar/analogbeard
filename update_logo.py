@@ -2,7 +2,7 @@
 repo (default ~/code/bearded-logos) and inline the stacked dark lockup into index.html, tagging the
 glow and filament so the page's CSS can make them flicker. Run it after the logo changes, then commit.
 The site itself has no build step: GitHub Pages serves these files as they are."""
-import os, re, shutil, sys
+import math, os, random, re, shutil, sys
 
 SRC = os.path.join(os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else "~/code/bearded-logos"), "analogbeard", "web")
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -43,9 +43,10 @@ fg = body.index(' <path class="fil-glow"'); fe = body.index('<path d="M 140 118'
 svg = (svg[:gi]
        + f'<g class="art" {g_open[3:]}{body[:fg]}</g>\n<g stroke-linecap="round">{body[fg:fe]}</g>\n'
        + f'<g class="art" {g_open[3:]}{body[fe:]}\n</g>' + svg[ge + 5:])
-for g in ('<g fill="#2b2420"><circle', '<g clip-path="url(#bc)">', '<g fill="#6e6a64"'):
+for g, cls in (('<g fill="#2b2420"><circle', "art"), ('<g clip-path="url(#bc)">', "art beard"),
+               ('<g fill="#6e6a64"', "art beard")):   # beard, then mustache
     need(g, f"the group {g}")
-    svg = svg.replace(g, '<g class="art" ' + g[3:], 1)
+    svg = svg.replace(g, f'<g class="{cls}" ' + g[3:], 1)
 
 # every outline of the tube except the filament (which stays real) and the beard's clip path,
 # drawn twice with jittered lines like a pencil going over it again
@@ -84,6 +85,62 @@ need("</defs>", "the defs")
 svg = svg.replace("</defs>", pencil + "</defs>", 1)
 glow = svg.index('<circle class="glow"'); glow = svg.index("/>", glow) + 2
 svg = svg[:glow] + sketch + svg[glow:]   # above the glow, below the colored tube
+
+
+# --- charcoal shading over the colored tube: dense short strokes, mostly parallel, uneven in
+# length, gap, pressure and angle, broken up by a paper-grain filter. One set of strokes is used
+# twice: dark graphite while the tube is lit, light pencil while it is out (the page's CSS swaps
+# them). Strokes are seeded, so re-running this script gives the same drawing.
+def charcoal(box, angle, spacing, seed):
+    """Strokes filling box (x0, y0, x1, y1), as a few <path>s grouped by pressure and width."""
+    x0, y0, x1, y1 = box
+    r = random.Random(seed); a = math.radians(angle)
+    dx, dy, nx, ny = math.cos(a), math.sin(a), -math.sin(a), math.cos(a)
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2; R = math.hypot(x1 - x0, y1 - y0) / 2 + 10
+    buckets = {}; t = -R
+    while t < R:
+        t += spacing * r.uniform(.6, 1.4); s = -R
+        while s < R:
+            L, gap, ja = r.uniform(10, 34), r.uniform(1, 8), a + r.uniform(-.06, .06)
+            px, py = cx + nx * t + dx * s, cy + ny * t + dy * s
+            key = (r.choice((.4, .6, .8, 1)), r.choice((.8, 1.1, 1.4)))
+            if x0 - 5 < px + dx * L / 2 < x1 + 5 and y0 - 5 < py + dy * L / 2 < y1 + 5:
+                buckets.setdefault(key, []).append(f"M{px:.0f} {py:.0f}l{math.cos(ja)*L:.0f} {math.sin(ja)*L:.0f}")
+            s += L + gap
+    return "".join(f'<path opacity="{o}" stroke-width="{w}" d="{"".join(d)}"/>' for (o, w), d in sorted(buckets.items()))
+
+beard_d = re.search(r'<g class="art beard" clip-path="url\(#bc\)">\s*<path d="([^"]+)"', svg).group(1)
+mi = svg.index('<g class="art beard" fill="#6e6a64"'); mustache = re.findall(r'<path d="([^"]+)"', svg[mi:svg.index("</g>", mi)])
+glass = re.search(r'<path d="(M 120 404 L 120 128[^"]*)"', svg)
+if not glass or not mustache: sys.exit("could not find the glass or mustache for the shading: has the logo changed?")
+fades = {"up": (0, 255, 0, 420, ((0, .15), (.55, .55), (1, 1))), "under": (0, 262, 0, 300, ((0, 1), (1, 0))),
+         "right": (215, 0, 281, 0, ((0, 0), (1, 1))), "left": (119, 0, 150, 0, ((0, .7), (1, 0)))}
+shading_defs = (
+    f'<clipPath id="c-beard"><path d="{beard_d}"/></clipPath>'
+    '<clipPath id="c-mus">' + "".join(f'<path d="{d}"/>' for d in mustache) + '</clipPath>'
+    f'<clipPath id="c-glass"><path d="{glass.group(1)}"/></clipPath>'
+    + "".join(f'<linearGradient id="g-{n}" gradientUnits="userSpaceOnUse" x1="{a}" y1="{b}" x2="{c}" y2="{d}">'
+              + "".join(f'<stop offset="{o}" stop-color="#fff" stop-opacity="{v}"/>' for o, v in stops) + '</linearGradient>'
+              f'<mask id="m-{n}" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="560">'
+              f'<rect width="400" height="560" fill="url(#g-{n})"/></mask>' for n, (a, b, c, d, stops) in fades.items())
+    + '<filter id="charcoal" x="-5%" y="-5%" width="110%" height="110%">'
+      '<feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="5" result="n"/>'
+      '<feColorMatrix in="n" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -.75" result="tooth"/>'
+      '<feComposite in="SourceGraphic" in2="tooth" operator="in"/><feGaussianBlur stdDeviation=".35"/></filter>'
+    '<g id="shading" stroke-linecap="round" fill="none">'
+    f'<g clip-path="url(#c-beard)"><g mask="url(#m-up)">{charcoal((75, 240, 325, 425), 62, 2.6, 1)}</g>'
+    f'<g mask="url(#m-under)">{charcoal((80, 255, 320, 305), 58, 2.2, 2)}</g></g>'           # under the mustache
+    f'<g clip-path="url(#c-mus)" opacity=".7">{charcoal((85, 240, 315, 275), 64, 2.8, 3)}</g>'
+    f'<g clip-path="url(#c-glass)"><g mask="url(#m-right)">{charcoal((205, 96, 282, 410), 66, 2.4, 4)}</g>'
+    f'<g mask="url(#m-left)" opacity=".6">{charcoal((118, 96, 155, 410), 66, 2.8, 5)}</g></g></g>'
+)
+svg = svg.replace("</defs>", shading_defs + "</defs>", 1)
+mi = svg.index('<g class="art beard" fill="#6e6a64"')   # again: the defs above it just grew
+top = svg.index("</g>", mi) + 4   # on top of the colored tube, after the mustache
+svg = (svg[:top]
+       + '\n<g class="shade-dark" filter="url(#charcoal)"><use href="#shading" stroke="#2b2420" opacity=".55"/></g>'
+       + '<g class="shade-light" filter="url(#charcoal)"><use href="#shading" stroke="#e6d9c0" opacity=".35"/></g>'
+       + svg[top:])
 
 p = os.path.join(HERE, "index.html"); html = open(p).read()
 html = re.sub(r"(<!-- logo:start[^>]*-->\n).*?(<!-- logo:end -->)", lambda m: m.group(1) + svg + "\n" + m.group(2), html, flags=re.S)

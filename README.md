@@ -4,8 +4,9 @@ The Analog Beard website: for now a single "coming soon" page. Arcane inventions
 ingenuity. Circuits, code, coin-op.
 
 The tagline's first word rotates: the page says "Arcane" (what search engines and link previews
-see), and a small script in `index.html` flickers in another every 6 to 10 seconds: Uncanny,
-Curious, Eclectic, Timeless, Wondrous. Edit `WORDS` there to change the set. Visitors who ask for
+see), and it changes only when the tube goes out and relights (every 15 to 35 seconds, see below):
+the word goes dark with the tube and a new one comes on as the filament catches: Uncanny, Curious,
+Eclectic, Timeless, Wondrous. Edit `WORDS` there to change the set. Visitors who ask for
 reduced motion get one random word and no flicker.
 
 ## How it's served
@@ -40,8 +41,8 @@ The logo is inline (not an `<img>`) so the page's CSS can make the tube's glow a
 `update_logo.py` also adds a pencil sketch of the tube (a web-only layer: the logo itself stays plain
 so it still works as a PCB silkscreen). The page opens on that sketch drawing itself, with
 handwritten labels (tube, filament, beard, plug), then the filament catches and the colored tube
-fades in over it. After that the stutters only dim the tube, and every 15 to 35 seconds it goes dark
-(still in color) for a moment and relights. The label positions are placed by hand for this logo,
+fades in over it. After that the stutters only dim the tube, and every 15 to 35 seconds it goes dark for a moment
+(dim and partly see-through, so the cold filament and the pencil lines show through) and relights. Charcoal-style pencil shading (seeded random strokes, so re-running the script gives the same drawing) sits over the beard, mustache and glass: dark graphite while the tube is lit, light pencil while it is out, when the beard also goes darker than the glass. The label positions and shading areas are placed by hand for this logo,
 so check them by eye if the logo changes. All of the motion is switched off for visitors whose
 system asks for reduced motion: they see the lit tube with its labels.
 
