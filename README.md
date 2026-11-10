@@ -38,7 +38,7 @@ python3 update_logo.py        # or: python3 update_logo.py /path/to/bearded-logo
 The logo is inline (not an `<img>`) so the page's CSS can make the tube's glow and filament flicker.
 The flicker is switched off for visitors whose system asks for reduced motion.
 
-The text is set in Fraunces (from Google Fonts), the same family as the wordmark.
+The text is set in Saira (from Google Fonts); the wordmark in the logo stays Fraunces. A film-grain and vignette overlay (CSS, no image files) sits over the whole page.
 
 ## Ideas for later
 
